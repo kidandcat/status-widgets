@@ -65,22 +65,22 @@ setTimeout(()=>{
 
 //Functions
 function check(url, repeat) {
-  tcpp.probe(url.split('//')[1], ((url.split('//')[0] == 'https') ? 443 : 80), function(err, available) {
-    if (available) {
+  request.get(url, function(error, response, body) {
+    if (response.statusCode == 200) {
       tcpp.ping({
         address: url.split('//')[1]
       }, function(err, data) {
         if (err) {
           alert(available, err, url);
         }
-        LATEST_DATA[url] = Math.round(data.min);
+        LATEST_DATA[url] = Math.round(data.avg);
         io.emit('update', {
           url: url,
-          time: Math.round(data.min)
+          time: Math.round(data.avg)
         });
       });
     } else {
-      alert(available, err, url);
+      alert(response.statusCode, error, url);
       io.emit('update', {
         url: url,
         time: 0
