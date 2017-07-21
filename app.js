@@ -73,10 +73,10 @@ function check(url, repeat) {
         if (err) {
           alert(available, err, url);
         }
-        LATEST_DATA[url] = Math.round(data.min);
+        LATEST_DATA[url] = Math.round(data.avg);
         io.emit('update', {
           url: url,
-          time: Math.round(data.min)
+          time: Math.round(data.avg)
         });
       });
     } else {
