@@ -3,7 +3,6 @@
 
   var socket = io();
   socket.on('update', function(data) {
-    console.log('data', data);
     if (typeof statuss[data.name] == 'undefined') {
       init(data.name, data.time);
     } else {
@@ -15,8 +14,8 @@
   function init(url, time) {
     var container = document.createElement('div');
     container.style.marginLeft = '50%';
-    container.style.width = '50%';
-    container.style.minWidth = '800px';
+    container.style.width = '80%';
+    container.style.maxWidth = '800px';
     container.style.transform = 'translate(-50%)';
     container.style.display = 'inline-block';
     container.style.border = 'none';
