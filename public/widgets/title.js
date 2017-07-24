@@ -13,8 +13,8 @@
 
   var logo = document.createElement('img');
   logo.src = '/img/logo.png';
-  logo.style.width: '80%';
-  logo.style.height: 'auto';
+  logo.style.width = '80%';
+  logo.style.height = 'auto';
   container.appendChild(logo);
 
   container.animate([{
