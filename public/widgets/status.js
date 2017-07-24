@@ -3,12 +3,13 @@
 
   var socket = io();
   socket.on('update', function(data) {
-    if (typeof statuss[data.url] == 'undefined') {
-      init(data.url, data.time);
+    console.log('data', data);
+    if (typeof statuss[data.name] == 'undefined') {
+      init(data.name, data.time);
     } else {
-      update(data.url, data.time);
+      update(data.name, data.time);
     }
-    statuss[data.url] = data.time;
+    statuss[data.name] = data.time;
   });
 
   function init(url, time) {

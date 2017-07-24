@@ -27,8 +27,9 @@ io.on('connection', function(socket) {
   URLS.forEach((u) => {
     try{
       socket.emit('update', {
-        url: u,
-        time: LATEST_DATA[u]
+        url: u.url,
+        name: u.name,
+        time: LATEST_DATA[u.url]
       });
     }catch(e){}
   });
@@ -41,7 +42,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use('/', express.static('public'));
 app.post('/add/url', function(req, res) {
-  saveUrl(req.body.url);
+  saveUrl(req.body.url, req.body.name);
   res.json({
     'message': 'Done'
   });
@@ -65,24 +66,26 @@ setTimeout(()=>{
 
 //Functions
 function check(url, repeat) {
-  request.get(url, function(error, response, body) {
+  request.get(url.url, function(error, response, body) {
     if (response.statusCode == 200) {
       tcpp.ping({
-        address: url.split('//')[1]
+        address: url.url.split('//')[1]
       }, function(err, data) {
         if (err) {
-          alert(available, err, url);
+          alert(available, err, url.url);
         }
-        LATEST_DATA[url] = Math.round(data.avg);
+        LATEST_DATA[url.url] = Math.round(data.avg);
         io.emit('update', {
-          url: url,
+          url: url.url,
+          name: url.name,
           time: Math.round(data.avg)
         });
       });
     } else {
-      alert(response.statusCode, error, url);
+      alert(response.statusCode, error, url.url);
       io.emit('update', {
-        url: url,
+        url: url.url,
+        name: url.name,
         time: 0
       });
     }
@@ -146,8 +149,11 @@ function loadUrls() {
   URLS = require(__dirname + '/urls.json').urls;
 }
 
-function saveUrl(url) {
-  URLS.push(url);
+function saveUrl(url, name) {
+  URLS.push({
+    url: url,
+    name: name
+  });
   fs.writeFileSync(__dirname + '/urls.json', JSON.stringify({
     urls: URLS
   }, null, 2));
