@@ -67,7 +67,7 @@ setTimeout(()=>{
 //Functions
 function check(url, repeat) {
   request.get(url.url, function(error, response, body) {
-    if (response.statusCode == 200) {
+    if (response && typeof response.statusCode != 'undefined' && response.statusCode == 200) {
       tcpp.ping({
         address: url.url.split('//')[1]
       }, function(err, data) {
@@ -82,7 +82,11 @@ function check(url, repeat) {
         });
       });
     } else {
-      alert(response.statusCode, error, url.url);
+      if(!response || typeof response.statusCode != 'undefined'){
+        alert(null, error, url.url);
+      }else{
+        alert(response.statusCode, error, url.url);
+      }
       io.emit('update', {
         url: url.url,
         name: url.name,
